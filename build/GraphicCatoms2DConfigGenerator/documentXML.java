@@ -19,6 +19,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
@@ -42,6 +43,7 @@ class DocumentXML {
      
     try {
       doc = docBuilder.parse(new File(file));
+      doc.getDocumentElement().normalize();
     } catch(SAXException e) {
       System.err.println("ERROR: in " + file + " parsing");
     } catch (IOException e) {
@@ -49,6 +51,45 @@ class DocumentXML {
     }
   }
   
+  // reading http://www.mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/
+  void read() {
+    NodeList nList;
+    Node nNode;
+    Element eElement;
+    
+    System.out.println("Initial:");
+    nList = doc.getElementsByTagName("blockList");
+    nNode = nList.item(0);
+    eElement = (Element) nNode;
+    nList = eElement.getElementsByTagName("block");
+    for (int temp = 0; temp < nList.getLength(); temp++) {
+        nNode = nList.item(temp);
+        if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+          eElement = (Element) nNode;
+          System.out.println(eElement.getAttribute("position"));
+          //System.out.println(eElement.getElementsByTagName("position").item(0));
+        }
+    }
+    
+    System.out.println("Target:");
+    nList = doc.getElementsByTagName("targetGrid");
+    nNode = nList.item(0);
+    eElement = (Element) nNode;
+    nList = eElement.getElementsByTagName("block");
+    for (int temp = 0; temp < nList.getLength(); temp++) {
+        nNode = nList.item(temp);
+        if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+          eElement = (Element) nNode;
+          System.out.println(eElement.getAttribute("position"));
+          //System.out.println(eElement.getElementsByTagName("position").item(0));
+        }
+    }
+    
+    //Element e = doc.getElementsByTagName("world");
+    /*NodeList nodeList = document.getElementsByTagName("Item");
+        for(int x=0,size= nodeList.getLength(); x<size; x++) {
+            System.out.println(nodeList.item(x).getAttributes().getNamedItem("name").getNodeValue());*/
+  }
   /*        NodeList nodeList = document.getElementsByTagName("Item");
         for(int x=0,size= nodeList.getLength(); x<size; x++) {
             System.out.println(nodeList.item(x).getAttributes().getNamedItem("name").getNodeValue());

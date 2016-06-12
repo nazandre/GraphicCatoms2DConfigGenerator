@@ -5,6 +5,7 @@ import java.util.Vector;
 import java.util.Enumeration;
 import java.awt.Rectangle;
 import java.awt.Point;
+import processing.core.*;
 
 // 640 * 800
 // 1024 * 768
@@ -36,6 +37,10 @@ void start() {
   selectedColorIndex = 1;
   // initialize the cells
   grid = new Grid(parameters);
+  
+  //DocumentXML doc = new DocumentXML(getAbsolutePath("config.xml"));
+  DocumentXML doc = new DocumentXML(sketchPath("config.xml"));
+  doc.read();
   
   if (confToLoad != "") {
     String filePath = sketchPath(confToLoad);

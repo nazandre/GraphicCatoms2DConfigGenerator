@@ -14,6 +14,8 @@ class Cell {
  Color color;
  Color borderColor;
  float strokeSize;
+ boolean target;
+ boolean initial;
  
  Cell(int i, int j, Parameters parameters, Coordinate gridCoordinates) {
    this.gridCoordinates = gridCoordinates;
@@ -27,6 +29,8 @@ class Cell {
    int x = (int)gridCoordinates.x;
    int y = (int)gridCoordinates.y;
    strokeSize = parameters.getStrokeSize();
+   initial = false;
+   target = false;
  }
  
  Coordinate getWorldCoordinates() {
@@ -72,10 +76,34 @@ class Cell {
    }
    
    applet.strokeWeight(strokeSize);
-   applet.stroke(rt,rg,rb);
+   applet.stroke(0,0,0);
+   
+   float mySize = cellSize - strokeSize/2;
+   float factor = (float) (20.0/100.0);
+   
+   applet.fill(255,0,0);
+   applet.ellipse(worldCoordinates.x,worldCoordinates.y,mySize,mySize);
+   
+   ///*
+   mySize = mySize- mySize*factor;
+   mySize = mySize - strokeSize/2;
+   applet.fill(0,255,0);
+   applet.ellipse(worldCoordinates.x,worldCoordinates.y,mySize,mySize);
+   //*/
+   
+   ///*
    applet.fill(r,g,b);
-   applet.ellipse(worldCoordinates.x,worldCoordinates.y,cellSize-strokeSize/2,cellSize-strokeSize/2);
-   applet.strokeWeight(parameters.getStrokeSize());
+   mySize = mySize-mySize*factor;
+   mySize = mySize - strokeSize/2;
+   applet.ellipse(worldCoordinates.x,worldCoordinates.y,mySize,mySize);
+   //*/
+   
+   //applet.strokeWeight(strokeSize/2);
+   //applet.stroke(0,255,0);
+   //applet.fill(r,g,b);
+   
+   //applet.ellipse(worldCoordinates.x,worldCoordinates.y,cellSize-strokeSize/2,cellSize-strokeSize/2);
+   //applet.strokeWeight(parameters.getStrokeSize());
  }
  
  void setBorderSize(float f) {
