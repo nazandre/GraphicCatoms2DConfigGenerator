@@ -22,16 +22,16 @@ Here are the different keyboard shortcuts:
 * <kbd>n</kbd>: Print the number of modules in the initial/target grids.
 * <kbd>z</kbd>: Go into "border"/"no-border" mode. By default, "border" mode is enable. In this mode, modules are drawn with two borders. The outermost one is green if the module belongs to the initial shape and white otherwise. The inner one is red if the module belongs to the target shape and white otherwise.
 * Colors: Added modules will have this color. Moreover, clicking on a module will change its color to this color. By default, added modules are gray.
-	..*<kbd>w</kbd>: white.
-	..*<kbd>d</kbd>: black (dark).
-	..*<kbd>c</kbd>: gray (classic, default color).
-	..*<kbd>a</kbd>: aqua.
-	..*<kbd>r</kbd>: red.	
-	..*<kbd>o</kbd>: orange.
-	..*<kbd>y</kbd>: yellow.
-	..*<kbd>a</kbd>: aqua.
-	..*<kbd>b</kbd>: blue.
-	..*<kbd>g</kbd>: green.
+  - <kbd>w</kbd>: white.
+  - <kbd>d</kbd>: black (dark).
+  - <kbd>c</kbd>: gray (classic, default color).
+  - <kbd>a</kbd>: aqua.
+  - <kbd>r</kbd>: red.	
+  - <kbd>o</kbd>: orange.
+  - <kbd>y</kbd>: yellow.
+  - <kbd>a</kbd>: aqua.
+  - <kbd>b</kbd>: blue.
+  - <kbd>g</kbd>: green.
 
 ### Example
 
@@ -39,7 +39,7 @@ Below are screenshots of GraphicCatoms2DConfigGenerator.
 
 ![](screenshots/car.png?raw=true)
 
-*Screenshot of GraphicCatoms2DConfigGenerator loaded with `example/car.xml`.*
+*Screenshot of GraphicCatoms2DConfigGenerator, in "border" mode, loaded with `example/car.xml`.*
 
 ![](screenshots/car-noborder.png?raw=true)
 
