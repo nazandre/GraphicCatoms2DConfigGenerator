@@ -16,8 +16,8 @@ static int cellSize = 40;
 static int strokeSize = 2;
 static int sizeRandomConfiguration = 300;
 static boolean random = false;
-static String confToSave = "catoms2d-config.xml";
-static String confToLoad = confToSave; //"config.xml";
+static String confToSave = "config.xml";
+static String confToLoad = confToSave;
 
 static int initial = 0;
 static int target = 1;
