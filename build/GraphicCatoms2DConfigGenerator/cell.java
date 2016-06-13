@@ -38,7 +38,7 @@ class Cell {
     float height = parameters.getScreenHeight();
     float x = gridCoordinates.x;
     float y = gridCoordinates.y;
-    double worldX = cellSize/2 + cellSize * (x - 0.5 * ((int)y & 1));
+    double worldX = cellSize/2 + cellSize * (x + 0.5 * ((int)y & 1));
     double worldY = height - (cellSize/2 + cellSize * Math.sqrt(3)/2 * y);
     return new Coordinate((float)worldX,(float)worldY);
  }
@@ -81,13 +81,23 @@ class Cell {
    float mySize = cellSize - strokeSize/2;
    float factor = (float) (20.0/100.0);
    
-   applet.fill(255,0,0);
+   if (initial) {
+     applet.fill(0,255,0);
+   } else {
+     applet.fill(255,255,255);
+   }
    applet.ellipse(worldCoordinates.x,worldCoordinates.y,mySize,mySize);
    
    ///*
    mySize = mySize- mySize*factor;
    mySize = mySize - strokeSize/2;
-   applet.fill(0,255,0);
+   
+   if (target) {
+     applet.fill(255,0,0);
+   } else {
+     applet.fill(255,255,255);
+   }
+   
    applet.ellipse(worldCoordinates.x,worldCoordinates.y,mySize,mySize);
    //*/
    
@@ -154,6 +164,14 @@ class Cell {
  boolean areNeighbors(Cell c) {
    // euclidean distance <= 
    return Math.round(parameters.getCellSize() - euclideanDistance(c)) == 0; // <= width+2;
+ }
+ 
+ void setInitial(boolean b) {
+   initial = b; 
+ }
+ 
+ void setTarget(boolean b) {
+   target = b; 
  }
  
  @Override

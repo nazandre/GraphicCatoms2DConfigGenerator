@@ -29,11 +29,15 @@ import org.xml.sax.SAXException;
 
 class DocumentXML {
   
-  Document doc;
-  
-  DocumentXML(String file) {
-    doc = null;
+  // reading http://www.mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/
+  static void importConfig(Grid grid, String fileName) {
+    Document doc = null;
     DocumentBuilder docBuilder = null;
+    
+    NodeList nList;
+    Node nNode;
+    Element eElement;
+
     try {
       docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
     } catch(ParserConfigurationException e) {
@@ -42,22 +46,15 @@ class DocumentXML {
     }
      
     try {
-      doc = docBuilder.parse(new File(file));
+      doc = docBuilder.parse(new File(fileName));
       doc.getDocumentElement().normalize();
     } catch(SAXException e) {
-      System.err.println("ERROR: in " + file + " parsing");
+      System.err.println("ERROR: in " + fileName + " parsing");
     } catch (IOException e) {
-      System.err.println("ERROR: in/out error while reading " + file);
+      System.err.println("ERROR: in/out error while reading " + fileName);
     }
-  }
-  
-  // reading http://www.mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/
-  void read() {
-    NodeList nList;
-    Node nNode;
-    Element eElement;
     
-    System.out.println("Initial:");
+    //System.out.println("Initial:");
     nList = doc.getElementsByTagName("blockList");
     nNode = nList.item(0);
     eElement = (Element) nNode;
@@ -66,12 +63,19 @@ class DocumentXML {
         nNode = nList.item(temp);
         if (nNode.getNodeType() == Node.ELEMENT_NODE) {
           eElement = (Element) nNode;
-          System.out.println(eElement.getAttribute("position"));
+          //System.out.println(eElement.getAttribute("position"));
+          String spos = eElement.getAttribute("position");
+          String pos[] = spos.split(",");
+          int x = Integer.parseInt(pos[0]);
+          int y = Integer.parseInt(pos[1]);
+          Cell c = grid.getCell(x,y);
+          c.setInitial(true);
+          grid.fillCell(c);
           //System.out.println(eElement.getElementsByTagName("position").item(0));
         }
     }
     
-    System.out.println("Target:");
+    //System.out.println("Target:");
     nList = doc.getElementsByTagName("targetGrid");
     nNode = nList.item(0);
     eElement = (Element) nNode;
@@ -80,7 +84,14 @@ class DocumentXML {
         nNode = nList.item(temp);
         if (nNode.getNodeType() == Node.ELEMENT_NODE) {
           eElement = (Element) nNode;
-          System.out.println(eElement.getAttribute("position"));
+          //System.out.println(eElement.getAttribute("position"));
+          String spos = eElement.getAttribute("position");
+          String pos[] = spos.split(",");
+          int x = Integer.parseInt(pos[0]);
+          int y = Integer.parseInt(pos[1]);
+          Cell c = grid.getCell(x,y);
+          c.setTarget(true);
+          grid.fillCell(c);
           //System.out.println(eElement.getElementsByTagName("position").item(0));
         }
     }
@@ -89,6 +100,11 @@ class DocumentXML {
     /*NodeList nodeList = document.getElementsByTagName("Item");
         for(int x=0,size= nodeList.getLength(); x<size; x++) {
             System.out.println(nodeList.item(x).getAttributes().getNamedItem("name").getNodeValue());*/
+  }
+  
+  
+  static void exportConfig(Grid grid, String fileName) {
+    
   }
   /*        NodeList nodeList = document.getElementsByTagName("Item");
         for(int x=0,size= nodeList.getLength(); x<size; x++) {

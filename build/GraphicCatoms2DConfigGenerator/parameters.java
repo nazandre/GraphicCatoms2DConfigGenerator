@@ -3,23 +3,17 @@ import processing.core.*;
 class Parameters {
   
   PApplet applet;
-  String configurationFileName;
   float cellSize;
   float strokeSize;
   
-  Parameters (PApplet applet, String configurationFileName, float cellSize, float strokeSize) {
+  Parameters (PApplet applet, float cellSize, float strokeSize) {
     this.applet = applet;
-    this.configurationFileName = configurationFileName;
     this.cellSize = cellSize;
     this.strokeSize = strokeSize;
   }
   
   PApplet getPApplet() {
     return applet;
-  }
-  
-  String getConfigurationFileName() {
-    return configurationFileName; 
   }
   
   float getCellSize() {
@@ -44,13 +38,5 @@ class Parameters {
 
   float getGridHeight() {
     return (float) Math.ceil(2*getScreenHeight()/(getCellSize()+Math.sqrt(3)/2*getCellSize()))+1;
-  }
-  
-  String getAbsolutePath(String file) {
-    return applet.sketchPath(file); 
-  }
-  
-  String getConfigurationFilePath() {
-    return getAbsolutePath(configurationFileName);
   }
 }

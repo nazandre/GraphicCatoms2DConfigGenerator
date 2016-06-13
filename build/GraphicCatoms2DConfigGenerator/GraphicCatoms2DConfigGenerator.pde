@@ -16,13 +16,21 @@ static int cellSize = 40;
 static int strokeSize = 2;
 static int sizeRandomConfiguration = 300;
 static boolean random = false;
-static String configurationFileName = "catoms2d-config.txt";
-static String confToLoad = "catoms2d-config.txt";
+static String confToSave = "catoms2d-config.xml";
+static String confToLoad = "config.xml";
 
+static int initial = 1;
+static int target = 2;
+int selectedGrid;
 Grid grid;
+
 Parameters parameters;
 ColorDictionnary colors;
 int selectedColorIndex;
+
+String getAbsolutePath(String file) {
+    return sketchPath(file);
+}
 
 void settings() {
   size(screenWidth,screenHeight);
@@ -32,21 +40,18 @@ void settings() {
 void start() {
   //size(screenWidth,screenHeight);
   //size(2100,1000);
-  parameters = new Parameters(this,configurationFileName, cellSize, strokeSize);
+  parameters = new Parameters(this, cellSize, strokeSize);
   colors = new ColorDictionnary(parameters);
   selectedColorIndex = 1;
   // initialize the cells
   grid = new Grid(parameters);
+  selectedGrid = initial;
   
   //DocumentXML doc = new DocumentXML(getAbsolutePath("config.xml"));
-  DocumentXML doc = new DocumentXML(sketchPath("config.xml"));
-  doc.read();
   
   if (confToLoad != "") {
-    String filePath = sketchPath(confToLoad);
-    grid.importConfiguration(filePath);
-    //grid.computeAPSP();
-    System.out.println(filePath + " loaded!");
+    DocumentXML.importConfig(grid,getAbsolutePath(confToLoad));
+    System.out.println(getAbsolutePath(confToLoad) + " loaded!");
   }
 }
 
@@ -57,10 +62,10 @@ void mousePressed() {
    String s = c.id + "(" + c.gridCoordinates.x + "," + c.gridCoordinates.y + ")";
    if (mouseButton == LEFT) {
       grid.fillCell(c, colors.getColor(selectedColorIndex));
-      System.out.println(s + " filled!");
+      System.out.println(s + " filled in " + "gridname" + "!");
    } else if (mouseButton == RIGHT) {
      grid.unfillCell(c);
-     System.out.println(s + " unfilled!");
+     System.out.println(s + " unfilled in " + "gridname" +  "!");
    }
  } else {
    System.out.println("null clicked!"); 
@@ -71,20 +76,22 @@ void keyPressed() {
   switch(key) {
     case 'i':
       println("Initial configuration mode");
+      selectedGrid = initial;
     break;
     case 't':
       println("Target configuration mode");
+      selectedGrid = target;
     break;
     case 's': // save
       println("Saving...");
-      grid.exportConfiguration();
+      DocumentXML.exportConfig(grid,getAbsolutePath(confToSave));
       println("ok!");
     break;
-    case 'l': // (re)-load
+   /* case 'l': // (re)-load
       println("Loadding...");
       grid.importConfiguration();
       println("ok!");
-    break;
+    break;*/
     case 'p':
       String filename = "picture.png";
       Rectangle rec = grid.getRectangle();
@@ -123,6 +130,7 @@ void keyPressed() {
       ;;
   }
 }
+
 /*
 void drawNbNeighbors(Cell c) {
   if (c.filled) {

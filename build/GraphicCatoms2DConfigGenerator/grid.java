@@ -117,11 +117,6 @@ class Grid {
   /*void setCellColor(float x, float y, Color c) {
      
   }*/
-  
-  void exportConfiguration() {
-    exportConfiguration(parameters.getConfigurationFilePath());   
-  }
-  
   void exportConfiguration(String filePath) {
     PrintWriter output;
     try {
@@ -168,11 +163,7 @@ class Grid {
       fillCell(c);
     } while (true);
   }
-  
-  void importConfiguration() {
-    importConfiguration(parameters.getConfigurationFilePath());  
-  }
-  
+    
   void draw() {
     for (int i = 0; i < cells.size(); i++) {
      Cell c = cells.get(i);
