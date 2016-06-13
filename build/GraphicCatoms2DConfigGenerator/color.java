@@ -5,17 +5,25 @@ class Color {
   int g;
   int b;
   
-  int id;
+  static Color white = new Color (255,255,255);
+  static Color black = new Color (0,0,0);
+  static Color red = new Color (255,0,0);
+  static Color green = new Color (0,255,0);
+  static Color blue = new Color (0,0,255);
+  static Color yellow  = new Color (255,255,0);  
+  static Color indigo = new Color (75, 0, 130);
+  static Color orange = new Color (255,140,0);
+  static Color gray = new Color (100,100,100);
+  static Color aqua = new Color (18, 189, 185);
+  static Color purple = new Color (139, 0, 255);
 
-  Color(int r, int g, int b, int id) {
+  Color(int r, int g, int b) {
     this.r = r;
     this.g = g;
     this.b = b;
-    this.id = id;
   }
   
   Color(int c) {
-    id = -1;
     r = (c >> 16) & 0xFF;
     g = (c >> 8) & 0xFF;
     b = c & 0xFF;
@@ -28,7 +36,6 @@ class Color {
      this.r  = RandomUtils.generate()%255;
      this.g  = RandomUtils.generate()%255;
      this.b  = RandomUtils.generate()%255;
-     this.id =  RandomUtils.generate()%255; // id is not actually used...
    } while ((r == 255) && (g == 255) && (b == 255));
   }
   
@@ -42,39 +49,5 @@ class Color {
   
   int getB() {
      return b; 
-  }
-}
-
-class ColorDictionnary {
-  ArrayList<Color> colors;
-  Parameters parameters;
-  
-  ColorDictionnary(Parameters parameters) {
-    this.parameters = parameters;
-    
-    colors = new ArrayList();
-    
-    Color white = new Color (255,255,255,0);
-    Color black = new Color (0,0,0,1);
-    Color red = new Color (255,0,0,2);
-    Color green = new Color (0,255,0,3);
-    Color blue = new Color (0,0,255,4);
-    
-    colors.add(white); // 0
-    colors.add(black); // 1
-    colors.add(red); // 2
-    colors.add(green); // 3
-    colors.add(blue); // 4
-  }
-
-  Color getColor(int index) {
-    if (index >= 0 && index < size()) {
-      return colors.get(index); 
-    }
-    return null;
-  }
-  
-  int size() {
-    return colors.size(); 
   }
 }

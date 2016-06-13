@@ -10,8 +10,8 @@ import processing.core.*;
 // 640 * 800
 // 1024 * 768
 // 1920 * 1080
-static int screenWidth = 2100;
-static int screenHeight = 1000;
+static int screenWidth = 1500;
+static int screenHeight = 768;
 static int cellSize = 40;
 static int strokeSize = 2;
 static int sizeRandomConfiguration = 300;
@@ -19,14 +19,13 @@ static boolean random = false;
 static String confToSave = "catoms2d-config.xml";
 static String confToLoad = "config.xml";
 
-static int initial = 1;
-static int target = 2;
-int selectedGrid;
-Grid grid;
-
-Parameters parameters;
-ColorDictionnary colors;
-int selectedColorIndex;
+static int initial = 0;
+static int target = 1;
+static int selectedGrid;
+static String gridName[] = {"initial", "target"};
+static Grid grid;
+static Parameters parameters;
+static Color selectedColor;
 
 String getAbsolutePath(String file) {
     return sketchPath(file);
@@ -34,20 +33,14 @@ String getAbsolutePath(String file) {
 
 void settings() {
   size(screenWidth,screenHeight);
-  //size(2100,1000);
 }
 
 void start() {
-  //size(screenWidth,screenHeight);
-  //size(2100,1000);
   parameters = new Parameters(this, cellSize, strokeSize);
-  colors = new ColorDictionnary(parameters);
-  selectedColorIndex = 1;
+  selectedColor = Color.gray;
   // initialize the cells
   grid = new Grid(parameters);
   selectedGrid = initial;
-  
-  //DocumentXML doc = new DocumentXML(getAbsolutePath("config.xml"));
   
   if (confToLoad != "") {
     DocumentXML.importConfig(grid,getAbsolutePath(confToLoad));
@@ -56,16 +49,25 @@ void start() {
 }
 
 void mousePressed() {
- // println("mousse pressed");
  Cell c = grid.getCellWorldCoord(mouseX,mouseY);
  if (c != null) {
-   String s = c.id + "(" + c.gridCoordinates.x + "," + c.gridCoordinates.y + ")";
+   String s = "(" + (int) c.gridCoordinates.x + "," + (int) c.gridCoordinates.y + ")";
    if (mouseButton == LEFT) {
-      grid.fillCell(c, colors.getColor(selectedColorIndex));
-      System.out.println(s + " filled in " + "gridname" + "!");
+      if (selectedGrid == initial) {
+        grid.setInitial(c,true);
+        c.setInitialColor(selectedColor);
+      } else {
+        grid.setTarget(c,true);
+        c.setTargetColor(selectedColor);
+      }
+      System.out.println(s + " filled in " + gridName[selectedGrid] + "!");
    } else if (mouseButton == RIGHT) {
-     grid.unfillCell(c);
-     System.out.println(s + " unfilled in " + "gridname" +  "!");
+      if (selectedGrid == initial) {
+        grid.setInitial(c,false);
+      } else {
+        grid.setTarget(c,false);
+      }
+      System.out.println(s + " unfilled in " + gridName[selectedGrid] +  "!");
    }
  } else {
    System.out.println("null clicked!"); 
@@ -86,7 +88,13 @@ void keyPressed() {
       DocumentXML.exportConfig(grid,getAbsolutePath(confToSave));
       println("Configuration exported in " + confToSave +  "...");
     break;
-   /* case 'l': // (re)-load
+    case 'n': // display size of grids
+      grid.printSize();
+    break;
+    case 'z': // disable border
+      grid.displayBorder = !grid.displayBorder;
+    break;
+    /*case 'l': // (re)-load
       println("Loadding...");
       grid.importConfiguration();
       println("ok!");
@@ -99,88 +107,43 @@ void keyPressed() {
       System.out.println("picture saved in " + filename);
     break;
     /* Colors */
-    case 'd': // black
+    case 'c': // gray (classic) 
+      selectedColor = Color.gray;
+    break;
+    case 'd': // black (dark)
       println("Color set to black");
-      selectedColorIndex = 1;
-    break;  
+      selectedColor = Color.black;
+    break;
+    case 'a': // aqua
+      println("Color set to aqua");
+      selectedColor = Color.aqua;
+    break;
     case 'w': // white
       println("Color set to white");
-      selectedColorIndex = 0;
+      selectedColor = Color.white;
     break;
     case 'r': // red
       println("Color set to red");
-      selectedColorIndex = 2;
+      selectedColor = Color.red;
     break;
     case 'g': // green
       println("Color set to green");
-      selectedColorIndex = 3;
+      selectedColor = Color.green;
     break;
     case 'b': // blue
       println("Color set to blue");
-      selectedColorIndex = 4;
+      selectedColor = Color.blue;
     break;
     case 'o' : // orange
       println("Color set to orange");
-      selectedColorIndex = -1;
+      selectedColor = Color.orange;
     case 'y' : // yellow
-      println("Color set to orange");
-      selectedColorIndex = -1;
+      println("Color set to yellow");
+      selectedColor = Color.yellow;
     default:
       ;;
   }
 }
-
-/*
-void drawNbNeighbors(Cell c) {
-  if (c.filled) {
-     int n = numberOfFilledNeighbors(c);
-     switch(n) {
-      case 1:
-       c.draw(0,0,255); // blue
-       break;
-      case 2:
-       c.draw(0,255,0); // green
-       break;
-      case 3:
-       c.draw(255,0,0); // red
-       break;
-      case 4:
-      c.draw(125,0,0);
-       break;
-      case 5:
-      c.draw(0,125,0);
-       break;
-      case 6:
-      c.draw(0,0,125);
-       break;
-      default:
-       c.draw(0,0,0);  
-     }
-     //c.draw((n*50)%255,(n*25)%255,(n*75)%255);  
-   } else {
-     c.draw(255,255,255); 
-   }
-}
-
-boolean violateConditions(Cell c1) {
- ArrayList<Cell> neighbors = filledNeighbors(c1);
- 
- if (c1.filled) {
-  return false; 
- }
- 
- for (int i = 0; i < neighbors.size(); i++) {
-   Cell c2 = neighbors.get(i);
-   for (int j = 0; j < neighbors.size(); j++) {
-    if (i == j) { continue; }
-      Cell c3 = neighbors.get(j);
-      if (align(c1,c2,c3)) {
-       return true;
-      }     
-   }
- }
- return false;
-}*/
 
 void draw() {
  background(255,255,255);

@@ -7,6 +7,8 @@ import java.io.BufferedReader;
 import java.awt.Rectangle;
 import java.awt.Point;
 
+import java.util.Iterator;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -75,8 +77,7 @@ class DocumentXML {
           int x = Integer.parseInt(pos[0]);
           int y = Integer.parseInt(pos[1]);
           Cell c = grid.getCell(x,y);
-          c.setInitial(true);
-          grid.fillCell(c);
+          grid.setInitial(c,true);
           //System.out.println(eElement.getElementsByTagName("position").item(0));
         }
     }
@@ -96,8 +97,7 @@ class DocumentXML {
           int x = Integer.parseInt(pos[0]);
           int y = Integer.parseInt(pos[1]);
           Cell c = grid.getCell(x,y);
-          c.setTarget(true);
-          grid.fillCell(c);
+          grid.setTarget(c,true);
           //System.out.println(eElement.getElementsByTagName("position").item(0));
         }
     }
@@ -106,6 +106,12 @@ class DocumentXML {
   
   static void exportConfig(Grid grid, String fileName) {
     PrintWriter output;
+    Iterator<Cell> it;
+    
+    grid.printSize();
+    if (grid.initial.size() != grid.target.size()) {
+       System.out.println("WARNING: initial and target grids have different size!"); 
+    }
     Rectangle rec = grid.getGridRectangle();
     rec.add(0,0);
     rec.setSize((int) (rec.getWidth()+2), (int) (rec.getHeight()+5)); // margin
@@ -125,17 +131,29 @@ class DocumentXML {
       output.println("  <spotlight target=\"" + (int)targetPoint.getX() + "," +(int) targetPoint.getY() + "," + 0 + "\" directionSpherical=\"" + angleAzimut + "," + angleElevation + "," + distance + "\" angle=\"30\"/>");
       
       output.println("  <blockList color=\"100,100,100\" blocksize=\"1,5,1\">");
-      
-      output.println("  </blockList>");
-      output.println("</world>");
-      
-      /*Iterator<Cell> it = filledCells.iterator();
+      it = grid.initial.iterator();
       while(it.hasNext()) {
         Cell c = it.next();
-            //output.println("fillCell(" + ");"); // Write the coordinate to the file
-        output.println(c.gridCoordinates.x + " " + c.gridCoordinates.y);
-      }*/
+        output.println("    <block" + 
+          " position=\"" + (int)c.gridCoordinates.x + "," + (int)c.gridCoordinates.y + "\"" +
+          " color=\"" + c.initialColor.getR() + "," + c.initialColor.getG() + "," + c.initialColor.getB() + "\"" +
+          "/>");
+      }
+      output.println("  </blockList>");
       
+      output.println("  <targetGrid>");
+      it = grid.target.iterator();
+      while(it.hasNext()) {
+        Cell c = it.next();
+        output.println("    <block" + 
+          " position=\"" + (int)c.gridCoordinates.x + "," + (int)c.gridCoordinates.y + "\"" +
+          " color=\"" + c.targetColor.getR() + "," + c.targetColor.getG() + "," + c.targetColor.getB() + "\"" +
+          "/>");
+      }
+      output.println("  </targetGrid>");
+      
+      output.println("</world>");
+
       output.flush(); // Writes the remaining data to the file
       output.close(); // Finishes the file*/
     } catch (Exception e) {}

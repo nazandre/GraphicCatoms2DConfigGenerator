@@ -9,20 +9,18 @@ class Cell {
  int index;
  Coordinate gridCoordinates;
  Coordinate worldCoordinates;
- boolean filled;
  Parameters parameters;
- Color color;
- Color borderColor;
  float strokeSize;
+ 
  boolean target;
  boolean initial;
+ 
+ Color initialColor;
+ Color targetColor;
  
  Cell(int i, int j, Parameters parameters, Coordinate gridCoordinates) {
    this.gridCoordinates = gridCoordinates;
    this.parameters = parameters;
-   this.filled = false;
-   this.color = null;
-   this.borderColor = null;
    worldCoordinates = getWorldCoordinates();
    index = i;
    id = j;
@@ -31,6 +29,8 @@ class Cell {
    strokeSize = parameters.getStrokeSize();
    initial = false;
    target = false;
+   this.initialColor = Color.gray;
+   this.targetColor = Color.gray;
  }
  
  Coordinate getWorldCoordinates() {
@@ -43,71 +43,62 @@ class Cell {
     return new Coordinate((float)worldX,(float)worldY);
  }
  
- void draw() {
-  if (!filled) {
-     draw(255,255,255); // white
+ void draw(boolean border) {
+  if (!isFilled()) {
+     draw(255,255,255,border); // white
   } else {
-    if (color == null) {
-      draw(0,0,0); // black
-    } else {
-      int r = color.getR();
-      int g = color.getG();
-      int b = color.getB();
-      //System.out.println(color.id + ": " + r + " " + g + " " + b);
-      draw(r,g,b); 
-    }
+     int r = 0;
+     int g = 0;
+     int b = 0;
+     if (initial) {
+       r = initialColor.getR();
+       g = initialColor.getG();
+       b = initialColor.getB();
+     } else if (target) {
+       r = targetColor.getR();
+       g = targetColor.getG();
+       b = targetColor.getB();
+     }
+     //System.out.println(color.id + ": " + r + " " + g + " " + b);
+     draw(r,g,b,border); 
   }
  }
   
-  void draw(int r, int g, int b) {
+  void draw(int r, int g, int b, boolean border) {
    PApplet applet = parameters.getPApplet();
    float cellSize = parameters.getCellSize();
    
-   int rt = 0;
-   int rg = 0;
-   int rb = 0;
-   
    if(!isFilled()) { return; }
-   
-   if (borderColor != null) {
-       rt = borderColor.getR();
-       rg = borderColor.getG();
-       rb = borderColor.getB(); 
-   }
-   
+     
    applet.strokeWeight(strokeSize);
    applet.stroke(0,0,0);
-   
    float mySize = cellSize - strokeSize/2;
-   float factor = (float) (20.0/100.0);
    
-   if (initial) {
-     applet.fill(0,255,0);
-   } else {
-     applet.fill(255,255,255);
+   if (border)  {
+     float factor = (float) (20.0/100.0);
+     if (initial) {
+       applet.fill(0,255,0);
+     } else {
+       applet.fill(255,255,255);
+     }
+     applet.ellipse(worldCoordinates.x,worldCoordinates.y,mySize,mySize);
+     
+     ///*
+     mySize = mySize- mySize*factor;
+     mySize = mySize - strokeSize/2;
+     
+     if (target) {
+       applet.fill(255,0,0);
+     } else {
+       applet.fill(255,255,255);
+     }
+     applet.ellipse(worldCoordinates.x,worldCoordinates.y,mySize,mySize);
+     mySize = mySize-mySize*factor;
    }
-   applet.ellipse(worldCoordinates.x,worldCoordinates.y,mySize,mySize);
    
-   ///*
-   mySize = mySize- mySize*factor;
-   mySize = mySize - strokeSize/2;
-   
-   if (target) {
-     applet.fill(255,0,0);
-   } else {
-     applet.fill(255,255,255);
-   }
-   
-   applet.ellipse(worldCoordinates.x,worldCoordinates.y,mySize,mySize);
-   //*/
-   
-   ///*
    applet.fill(r,g,b);
-   mySize = mySize-mySize*factor;
    mySize = mySize - strokeSize/2;
    applet.ellipse(worldCoordinates.x,worldCoordinates.y,mySize,mySize);
-   //*/
-   
    //applet.strokeWeight(strokeSize/2);
    //applet.stroke(0,255,0);
    //applet.fill(r,g,b);
@@ -119,33 +110,19 @@ class Cell {
  void setBorderSize(float f) {
   strokeSize = f; 
  }
- 
- void setBorderColor(Color bc) {
-   borderColor = bc;  
- }
- 
+  
  boolean isFilled() {
-    return filled; 
+    return initial || target;
  }
  
- void fill() {
-   filled = true;
+ void setInitialColor(Color color) {
+   initialColor = color;  
  }
  
- void fill(Color color) {
-  fill();
-  setColor(color); 
+ void setTargetColor(Color color) {
+   initialColor = color;  
  }
  
- void unfill() {
-   filled = false; 
- }
- 
- void setColor(Color color) {
-   this.color = color;  
- }
- 
-
  boolean intersect(float x, float y) {
    float cellSize = parameters.getCellSize();
    return (x>worldCoordinates.x - cellSize/2) && (x<worldCoordinates.x+cellSize/2) &&
