@@ -78,11 +78,19 @@ class DocumentXML {
           int y = Integer.parseInt(pos[1]);
           Cell c = grid.getCell(x,y);
           grid.setInitial(c,true);
-          //System.out.println(eElement.getElementsByTagName("position").item(0));
+          String col = eElement.getAttribute("color");
+          String colRGB[] = col.split(",");
+          int r = Integer.parseInt(colRGB[0]);
+          int g = Integer.parseInt(colRGB[1]);
+          int b = Integer.parseInt(colRGB[2]);
+          Color color = Color.getColor(r,g,b);
+          if (color == null) {
+            color = new Color(r,g,b);
+          }
+          c.setInitialColor(color);
         }
     }
     
-    //System.out.println("Target:");
     nList = doc.getElementsByTagName("targetGrid");
     nNode = nList.item(0);
     eElement = (Element) nNode;
@@ -95,10 +103,19 @@ class DocumentXML {
           String spos = eElement.getAttribute("position");
           String pos[] = spos.split(",");
           int x = Integer.parseInt(pos[0]);
-          int y = Integer.parseInt(pos[1]);
+          int y = Integer.parseInt(pos[1]);          
           Cell c = grid.getCell(x,y);
           grid.setTarget(c,true);
-          //System.out.println(eElement.getElementsByTagName("position").item(0));
+          String col = eElement.getAttribute("color");
+          String colRGB[] = col.split(",");
+          int r = Integer.parseInt(colRGB[0]);
+          int g = Integer.parseInt(colRGB[1]);
+          int b = Integer.parseInt(colRGB[2]);
+          Color color = Color.getColor(r,g,b);
+          if (color == null) {
+            color = new Color(r,g,b);
+          }
+          c.setTargetColor(color);
         }
     }
   }

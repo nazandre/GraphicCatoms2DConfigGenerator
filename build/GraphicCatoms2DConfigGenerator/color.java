@@ -1,4 +1,5 @@
-import java.util.ArrayList;
+import java.util.Vector;
+import java.util.Iterator;
 
 class Color {
   int r;
@@ -16,7 +17,7 @@ class Color {
   static Color gray = new Color (100,100,100);
   static Color aqua = new Color (18, 189, 185);
   static Color purple = new Color (139, 0, 255);
-
+  
   Color(int r, int g, int b) {
     this.r = r;
     this.g = g;
@@ -49,5 +50,44 @@ class Color {
   
   int getB() {
      return b; 
+  }
+  
+  static Color getColor(int r, int g, int b) {
+    Color col = new Color(r,g,b);
+    Vector<Color> colors = new Vector();
+    Iterator it;
+    
+    colors.add(white);
+    colors.add(black);
+    colors.add(red);
+    colors.add(green);
+    colors.add(blue);
+    colors.add(yellow);
+    colors.add(indigo);
+    colors.add(orange);
+    colors.add(gray);
+    colors.add(aqua);
+    colors.add(purple);
+    
+    it = colors.iterator();
+    while(it.hasNext()) {
+      Color c = (Color) it.next();
+      if (col.equals(c)) {
+         return c; 
+      }
+    }
+    return null;
+  }
+  
+  @Override public boolean equals(Object o) {
+    if ( this == o )
+      return true;
+    
+    if ( !(o instanceof Color) ) 
+      return false;
+    
+    Color col = (Color) o;
+    
+    return (col.r == r) && (col.g == g) && (col.b == b); 
   }
 }

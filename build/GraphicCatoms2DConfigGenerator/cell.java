@@ -50,11 +50,14 @@ class Cell {
      int r = 0;
      int g = 0;
      int b = 0;
+     
      if (initial) {
        r = initialColor.getR();
        g = initialColor.getG();
        b = initialColor.getB();
-     } else if (target) {
+     } 
+     
+     if (target) {
        r = targetColor.getR();
        g = targetColor.getG();
        b = targetColor.getB();
@@ -120,7 +123,7 @@ class Cell {
  }
  
  void setTargetColor(Color color) {
-   initialColor = color;  
+   targetColor = color;  
  }
  
  boolean intersect(float x, float y) {
