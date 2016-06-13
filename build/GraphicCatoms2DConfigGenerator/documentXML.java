@@ -1,5 +1,11 @@
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.FileReader;
+import java.io.BufferedReader;
+
+import java.awt.Rectangle;
+import java.awt.Point;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -95,21 +101,43 @@ class DocumentXML {
           //System.out.println(eElement.getElementsByTagName("position").item(0));
         }
     }
-    
-    //Element e = doc.getElementsByTagName("world");
-    /*NodeList nodeList = document.getElementsByTagName("Item");
-        for(int x=0,size= nodeList.getLength(); x<size; x++) {
-            System.out.println(nodeList.item(x).getAttributes().getNamedItem("name").getNodeValue());*/
   }
   
   
   static void exportConfig(Grid grid, String fileName) {
+    PrintWriter output;
+    Rectangle rec = grid.getGridRectangle();
+    rec.add(0,0);
+    rec.setSize((int) (rec.getWidth()+2), (int) (rec.getHeight()+5)); // margin
     
-  }
-  /*        NodeList nodeList = document.getElementsByTagName("Item");
-        for(int x=0,size= nodeList.getLength(); x<size; x++) {
-            System.out.println(nodeList.item(x).getAttributes().getNamedItem("name").getNodeValue());
-        } */
-  
-  
+    Point targetPoint = new Point((int)rec.getWidth()/2, (int)rec.getHeight()/2);
+    int angleAzimut = 0;
+    int angleElevation = 25;
+    double coef = 115./100.;
+    int distance =(int) (Math.max(rec.getWidth(),rec.getHeight())*coef); 
+    
+    try {
+      output = new PrintWriter(fileName);
+      
+      output.println("<?xml version=\"1.0\" standalone=\"no\" ?>");
+      output.println("<world gridSize=\"" + (int)rec.getWidth() + "," + (int)rec.getHeight() + "\">");
+      output.println("  <camera target=\"" + (int)targetPoint.getX() + "," + (int)targetPoint.getY() + "," + 0 + "\" directionSpherical=\"" + angleAzimut + "," + angleElevation + "," + distance + "\" angle=\"45\"/>");
+      output.println("  <spotlight target=\"" + (int)targetPoint.getX() + "," +(int) targetPoint.getY() + "," + 0 + "\" directionSpherical=\"" + angleAzimut + "," + angleElevation + "," + distance + "\" angle=\"30\"/>");
+      
+      output.println("  <blockList color=\"100,100,100\" blocksize=\"1,5,1\">");
+      
+      output.println("  </blockList>");
+      output.println("</world>");
+      
+      /*Iterator<Cell> it = filledCells.iterator();
+      while(it.hasNext()) {
+        Cell c = it.next();
+            //output.println("fillCell(" + ");"); // Write the coordinate to the file
+        output.println(c.gridCoordinates.x + " " + c.gridCoordinates.y);
+      }*/
+      
+      output.flush(); // Writes the remaining data to the file
+      output.close(); // Finishes the file*/
+    } catch (Exception e) {}
+  }  
 }

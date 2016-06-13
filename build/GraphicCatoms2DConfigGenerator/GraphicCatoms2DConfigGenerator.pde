@@ -83,9 +83,8 @@ void keyPressed() {
       selectedGrid = target;
     break;
     case 's': // save
-      println("Saving...");
       DocumentXML.exportConfig(grid,getAbsolutePath(confToSave));
-      println("ok!");
+      println("Configuration exported in " + confToSave +  "...");
     break;
    /* case 'l': // (re)-load
       println("Loadding...");

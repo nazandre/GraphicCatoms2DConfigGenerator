@@ -257,4 +257,27 @@ class Grid {
     Dimension d = new Dimension(w,h);
     return new Rectangle(leftTop,d);
    }
+   
+  Rectangle getGridRectangle() {
+    Point leftTop = new Point(Integer.MAX_VALUE,Integer.MAX_VALUE);
+    Point rightBottom = new Point(0,0);
+    float x = 0, y = 0;
+    Iterator<Cell> it = filledCells.iterator();
+    while(it.hasNext()) {
+      Cell c = it.next();
+      x = Math.min(c.gridCoordinates.x, (float)leftTop.getX());
+      y = Math.min(c.gridCoordinates.y, (float)leftTop.getY());
+      leftTop.move((int)x,(int)y);
+      x = Math.max(c.gridCoordinates.x, (float)rightBottom.getX());
+      y = Math.max(c.gridCoordinates.y, (float)rightBottom.getY());
+      rightBottom.move((int)x,(int)y);
+    }
+    x = (float)leftTop.getX();
+    y = (float)leftTop.getY();
+    leftTop.move((int)x,(int)y);
+    int w = (int)(rightBottom.getX()-leftTop.getX());
+    int h = (int)(rightBottom.getY()-leftTop.getY());
+    Dimension d = new Dimension(w,h);
+    return new Rectangle(leftTop,d);
+   }
 }
