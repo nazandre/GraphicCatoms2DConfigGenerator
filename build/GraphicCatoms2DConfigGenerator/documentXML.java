@@ -75,7 +75,7 @@ class DocumentXML {
           String spos = eElement.getAttribute("position");
           String pos[] = spos.split(",");
           int x = Integer.parseInt(pos[0]);
-          int y = Integer.parseInt(pos[1]);
+          int y = Integer.parseInt(pos[2]);
           Cell c = grid.getCell(x,y);
           grid.setInitial(c,true);
           String col = eElement.getAttribute("color");
@@ -91,10 +91,13 @@ class DocumentXML {
         }
     }
     
-    nList = doc.getElementsByTagName("targetGrid");
+    nList = doc.getElementsByTagName("targetList");
     nNode = nList.item(0);
     eElement = (Element) nNode;
-    nList = eElement.getElementsByTagName("block");
+    nList = eElement.getElementsByTagName("target");
+    nNode = nList.item(0);
+    eElement = (Element) nNode;
+    nList = eElement.getElementsByTagName("cell");
     for (int temp = 0; temp < nList.getLength(); temp++) {
         nNode = nList.item(temp);
         if (nNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -103,7 +106,7 @@ class DocumentXML {
           String spos = eElement.getAttribute("position");
           String pos[] = spos.split(",");
           int x = Integer.parseInt(pos[0]);
-          int y = Integer.parseInt(pos[1]);          
+          int y = Integer.parseInt(pos[2]);          
           Cell c = grid.getCell(x,y);
           grid.setTarget(c,true);
           String col = eElement.getAttribute("color");
@@ -152,22 +155,24 @@ class DocumentXML {
       while(it.hasNext()) {
         Cell c = it.next();
         output.println("    <block" + 
-          " position=\"" + (int)c.gridCoordinates.x + "," + (int)c.gridCoordinates.y + "\"" +
+          " position=\"" + (int)c.gridCoordinates.x + ",0," + (int)c.gridCoordinates.y + "\"" +
           " color=\"" + c.initialColor.getR() + "," + c.initialColor.getG() + "," + c.initialColor.getB() + "\"" +
           "/>");
       }
       output.println("  </blockList>");
       
-      output.println("  <targetGrid>");
+      output.println("  <targetList>");
+      output.println("    <target format=\"grid\">");
       it = grid.target.iterator();
       while(it.hasNext()) {
         Cell c = it.next();
-        output.println("    <block" + 
-          " position=\"" + (int)c.gridCoordinates.x + "," + (int)c.gridCoordinates.y + "\"" +
+        output.println("      <cell" + 
+          " position=\"" + (int)c.gridCoordinates.x + ",0," + (int)c.gridCoordinates.y + "\"" +
           " color=\"" + c.targetColor.getR() + "," + c.targetColor.getG() + "," + c.targetColor.getB() + "\"" +
           "/>");
       }
-      output.println("  </targetGrid>");
+      output.println("    </target>");
+      output.println("  </targetList>");
       
       output.println("</world>");
 
