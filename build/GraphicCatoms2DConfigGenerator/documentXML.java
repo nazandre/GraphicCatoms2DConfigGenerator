@@ -146,11 +146,11 @@ class DocumentXML {
       output = new PrintWriter(fileName);
       
       output.println("<?xml version=\"1.0\" standalone=\"no\" ?>");
-      output.println("<world gridSize=\"" + (int)rec.getWidth() + "," + (int)rec.getHeight() + "\">");
+      output.println("<world gridSize=\"" + (int)rec.getWidth() + ",1," + (int)rec.getHeight() + "\">");
       output.println("  <camera target=\"" + (int)targetPoint.getX() + "," + (int)targetPoint.getY() + "," + 0 + "\" directionSpherical=\"" + angleAzimut + "," + angleElevation + "," + distance + "\" angle=\"45\"/>");
       output.println("  <spotlight target=\"" + (int)targetPoint.getX() + "," +(int) targetPoint.getY() + "," + 0 + "\" directionSpherical=\"" + angleAzimut + "," + angleElevation + "," + distance + "\" angle=\"30\"/>");
       
-      output.println("  <blockList color=\"100,100,100\" blocksize=\"1,5,1\">");
+      output.println("  <blockList color=\"100,100,100\">");
       it = grid.initial.iterator();
       while(it.hasNext()) {
         Cell c = it.next();
